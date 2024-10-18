@@ -15,7 +15,8 @@ targetCompatibility = 1.8
 
 dependencies {
 	checkstyle "io.spring.javaformat:spring-javaformat-checkstyle:${javaFormatVersion}"
-	implementation(platform("org.springframework:spring-framework-bom:5.3.15"))
+	// 修改成5.3.39版本
+	implementation(platform("org.springframework:spring-framework-bom:5.3.39"))
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.11.4")
 	implementation("commons-codec:commons-codec:1.13")
 	implementation("org.apache.maven:maven-embedder:3.6.2")

@@ -1716,7 +1716,8 @@ bom {
 			]
 		}
 	}
-	library("Spring Framework", "5.3.27") {
+	// 修改成5.3.39版本
+	library("Spring Framework", "5.3.39") {
 		group("org.springframework") {
 			imports = [
 				"spring-framework-bom"

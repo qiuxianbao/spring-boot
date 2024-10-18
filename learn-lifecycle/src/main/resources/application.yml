@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: spring-lifecycle
+
+management:
+  port: 9209
+  endpoints:
+    web:
+      exposure:
+        include: "*"

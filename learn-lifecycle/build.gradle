@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group = "cn.thinkinjava"
+version = "2.5.16-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor(project(":spring-boot-project:spring-boot-tools:spring-boot-configuration-processor"))
+    implementation(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-web"))
+    implementation(enforcedPlatform(project(":spring-boot-project:spring-boot-dependencies")))
+    implementation(project(":spring-boot-project:spring-boot"))
+}

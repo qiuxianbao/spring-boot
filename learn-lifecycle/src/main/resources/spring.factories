@@ -1,0 +1,1 @@
+#org.springframework.boot.SpringApplicationRunListener=cn.thinkinjava.spring.lifecycle.test.person.PersonAfterSpringApplicationRunListener
