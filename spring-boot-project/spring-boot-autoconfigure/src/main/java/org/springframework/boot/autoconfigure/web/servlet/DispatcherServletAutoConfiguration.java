@@ -87,6 +87,7 @@ public class DispatcherServletAutoConfiguration {
 
 		@Bean(name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
 		public DispatcherServlet dispatcherServlet(WebMvcProperties webMvcProperties) {
+			// TODO-QIU: 2024年10月21日, 0021
 			DispatcherServlet dispatcherServlet = new DispatcherServlet();
 			dispatcherServlet.setDispatchOptionsRequest(webMvcProperties.isDispatchOptionsRequest());
 			dispatcherServlet.setDispatchTraceRequest(webMvcProperties.isDispatchTraceRequest());

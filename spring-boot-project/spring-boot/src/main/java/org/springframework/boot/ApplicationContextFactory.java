@@ -40,6 +40,7 @@ public interface ApplicationContextFactory {
 	 * A default {@link ApplicationContextFactory} implementation that will create an
 	 * appropriate context for the {@link WebApplicationType}.
 	 */
+	// TODO-QIU: 2024年10月18日, 0018 GenericWebApplicationContext 怎么创建的
 	ApplicationContextFactory DEFAULT = (webApplicationType) -> {
 		try {
 			for (ApplicationContextFactory candidate : SpringFactoriesLoader

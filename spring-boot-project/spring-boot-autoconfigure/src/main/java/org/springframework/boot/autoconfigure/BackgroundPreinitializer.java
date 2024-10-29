@@ -101,6 +101,7 @@ public class BackgroundPreinitializer implements ApplicationListener<SpringAppli
 					runSafely(new ConversionServiceInitializer());
 					runSafely(new ValidationInitializer());
 					runSafely(new MessageConverterInitializer());
+					//
 					runSafely(new JacksonInitializer());
 					runSafely(new CharsetInitializer());
 					preinitializationComplete.countDown();

@@ -45,10 +45,18 @@ class SpringApplicationRunListeners {
 	SpringApplicationRunListeners(Log log, Collection<? extends SpringApplicationRunListener> listeners,
 			ApplicationStartup applicationStartup) {
 		this.log = log;
+		// EventPublishingRunListener
 		this.listeners = new ArrayList<>(listeners);
 		this.applicationStartup = applicationStartup;
 	}
 
+	/**
+	 * 启动监听器
+	 * 记录step
+	 *
+	 * @param bootstrapContext
+	 * @param mainApplicationClass
+	 */
 	void starting(ConfigurableBootstrapContext bootstrapContext, Class<?> mainApplicationClass) {
 		doWithListeners("spring.boot.application.starting", (listener) -> listener.starting(bootstrapContext),
 				(step) -> {
@@ -113,6 +121,8 @@ class SpringApplicationRunListeners {
 
 	private void doWithListeners(String stepName, Consumer<SpringApplicationRunListener> listenerAction,
 			Consumer<StartupStep> stepAction) {
+
+		// DefaultApplicationStartup
 		StartupStep step = this.applicationStartup.start(stepName);
 		this.listeners.forEach(listenerAction);
 		if (stepAction != null) {
