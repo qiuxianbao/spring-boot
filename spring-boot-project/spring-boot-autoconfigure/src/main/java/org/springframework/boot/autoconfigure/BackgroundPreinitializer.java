@@ -79,11 +79,13 @@ public class BackgroundPreinitializer implements ApplicationListener<SpringAppli
 		}
 		if (event instanceof ApplicationEnvironmentPreparedEvent
 				&& preinitializationStarted.compareAndSet(false, true)) {
+			// 异步初始化操作
 			performPreinitialization();
 		}
 		if ((event instanceof ApplicationReadyEvent || event instanceof ApplicationFailedEvent)
 				&& preinitializationStarted.get()) {
 			try {
+				// 主线程等待初始化完成
 				preinitializationComplete.await();
 			}
 			catch (InterruptedException ex) {

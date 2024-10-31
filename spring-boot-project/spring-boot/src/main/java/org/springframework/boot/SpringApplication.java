@@ -527,7 +527,7 @@ public class SpringApplication {
 	private SpringApplicationRunListeners getRunListeners(String[] args) {
 		Class<?>[] types = new Class<?>[] { SpringApplication.class, String[].class };
 		// applicationStartup = ApplicationStartup.DEFAULT
-		// 会调用 EventPublishingRunListener 的构造方法
+		// 会调用 EventPublishingRunListener 的构造方法, types是构造方法的入参
 		return new SpringApplicationRunListeners(logger,
 				getSpringFactoriesInstances(SpringApplicationRunListener.class, types, this, args),
 				this.applicationStartup);

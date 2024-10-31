@@ -76,6 +76,8 @@ public class EnvironmentPostProcessorApplicationListener implements SmartApplica
 
 	@Override
 	public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
+		// 订阅以下 Event
+		// ApplicationStartingEvent 不是以下的子类
 		return ApplicationEnvironmentPreparedEvent.class.isAssignableFrom(eventType)
 				|| ApplicationPreparedEvent.class.isAssignableFrom(eventType)
 				|| ApplicationFailedEvent.class.isAssignableFrom(eventType);

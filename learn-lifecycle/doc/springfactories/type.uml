@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>java.lang.reflect.GenericArrayType</OriginalElement>
+  <nodes>
+    <node x="62.5" y="106.0">java.lang.reflect.WildcardType</node>
+    <node x="-110.0" y="346.0">sun.reflect.generics.reflectiveObjects.GenericArrayTypeImpl</node>
+    <node x="46.5" y="286.0">sun.reflect.generics.reflectiveObjects.WildcardTypeImpl</node>
+    <node x="165.0" y="346.0">sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl</node>
+    <node x="311.0" y="286.0">sun.reflect.generics.reflectiveObjects.TypeVariableImpl</node>
+    <node x="181.0" y="166.0">java.lang.reflect.ParameterizedType</node>
+    <node x="327.0" y="106.0">java.lang.reflect.TypeVariable</node>
+    <node x="-94.0" y="166.0">java.lang.reflect.GenericArrayType</node>
+    <node x="-44.0" y="-14.0">java.lang.reflect.Type</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="java.lang.reflect.WildcardType" target="java.lang.reflect.Type" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="140.0" y="80.0" />
+      <point x="0.0" y="80.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="java.lang.reflect.TypeVariable" target="java.lang.reflect.Type" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="420.0" y="80.0" />
+      <point x="0.0" y="80.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sun.reflect.generics.reflectiveObjects.TypeVariableImpl" target="java.lang.reflect.TypeVariable" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sun.reflect.generics.reflectiveObjects.GenericArrayTypeImpl" target="java.lang.reflect.GenericArrayType" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="java.lang.reflect.ParameterizedType" target="java.lang.reflect.Type" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="280.0" y="80.0" />
+      <point x="0.0" y="80.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="java.lang.reflect.GenericArrayType" target="java.lang.reflect.Type" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sun.reflect.generics.reflectiveObjects.WildcardTypeImpl" target="java.lang.reflect.WildcardType" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl" target="java.lang.reflect.ParameterizedType" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.0" showDependencies="false" x="209.5" y="180.0" />
+  <SelectedNodes>
+    <node>java.lang.reflect.Type</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

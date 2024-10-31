@@ -19,9 +19,20 @@ org.springframework.boot.context.config.ConfigDataLoader=\
 org.springframework.boot.context.config.ConfigTreeConfigDataLoader,\
 org.springframework.boot.context.config.StandardConfigDataLoader
 
+# Application Context Factories 这个版本多出来一个
+org.springframework.boot.ApplicationContextFactory=\
+org.springframework.boot.web.reactive.context.AnnotationConfigReactiveWebServerApplicationContext.Factory,\
+org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext.Factory
+
+# Run Listeners
+org.springframework.boot.SpringApplicationRunListener=\
+org.springframework.boot.context.event.EventPublishingRunListener
+
+# Error Reporters
+org.springframework.boot.SpringBootExceptionReporter=\
+org.springframework.boot.diagnostics.FailureAnalyzers
 
 # Application Context Initializers
-#// TODO-QIU: 2024?10?17?, 0017
 org.springframework.context.ApplicationContextInitializer=\
 org.springframework.boot.context.ConfigurationWarningsApplicationContextInitializer,\
 org.springframework.boot.context.ContextIdApplicationContextInitializer,\
@@ -30,7 +41,6 @@ org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitia
 org.springframework.boot.web.context.ServerPortInfoApplicationContextInitializer
 
 # Application Listeners
-#// TODO-QIU: 2024?10?17?, 0017
 org.springframework.context.ApplicationListener=\
 org.springframework.boot.ClearCachesApplicationListener,\
 org.springframework.boot.builder.ParentContextCloserApplicationListener,\
@@ -39,17 +49,6 @@ org.springframework.boot.context.config.AnsiOutputApplicationListener,\
 org.springframework.boot.context.config.DelegatingApplicationListener,\
 org.springframework.boot.context.logging.LoggingApplicationListener,\
 org.springframework.boot.env.EnvironmentPostProcessorApplicationListener
-
-# Run Listeners
-#// TODO-QIU: 2024?10?16?, 0016
-# org.springframework.boot.SpringApplication.getRunListeners
-org.springframework.boot.SpringApplicationRunListener=\
-org.springframework.boot.context.event.EventPublishingRunListener
-
-
-# Error Reporters
-org.springframework.boot.SpringBootExceptionReporter=\
-org.springframework.boot.diagnostics.FailureAnalyzers
 
 # Environment Post Processors
 org.springframework.boot.env.EnvironmentPostProcessor=\
@@ -71,7 +70,6 @@ org.springframework.boot.diagnostics.analyzer.BeanNotOfRequiredTypeFailureAnalyz
 org.springframework.boot.diagnostics.analyzer.BindFailureAnalyzer,\
 org.springframework.boot.diagnostics.analyzer.BindValidationFailureAnalyzer,\
 org.springframework.boot.diagnostics.analyzer.UnboundConfigurationPropertyFailureAnalyzer,\
-org.springframework.boot.diagnostics.analyzer.ConnectorStartFailureAnalyzer,\
 org.springframework.boot.diagnostics.analyzer.NoSuchMethodFailureAnalyzer,\
 org.springframework.boot.diagnostics.analyzer.NoUniqueBeanDefinitionFailureAnalyzer,\
 org.springframework.boot.diagnostics.analyzer.PortInUseFailureAnalyzer,\
@@ -79,7 +77,8 @@ org.springframework.boot.diagnostics.analyzer.ValidationExceptionFailureAnalyzer
 org.springframework.boot.diagnostics.analyzer.InvalidConfigurationPropertyNameFailureAnalyzer,\
 org.springframework.boot.diagnostics.analyzer.InvalidConfigurationPropertyValueFailureAnalyzer,\
 org.springframework.boot.diagnostics.analyzer.PatternParseFailureAnalyzer,\
-org.springframework.boot.liquibase.LiquibaseChangelogMissingFailureAnalyzer
+org.springframework.boot.liquibase.LiquibaseChangelogMissingFailureAnalyzer,\
+org.springframework.boot.web.embedded.tomcat.ConnectorStartFailureAnalyzer
 
 # Failure Analysis Reporters
 org.springframework.boot.diagnostics.FailureAnalysisReporter=\

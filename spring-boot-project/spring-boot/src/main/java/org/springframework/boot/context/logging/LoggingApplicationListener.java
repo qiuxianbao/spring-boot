@@ -188,11 +188,16 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 
 	@Override
 	public boolean supportsEventType(ResolvableType resolvableType) {
+		// 订阅以下类型
+		// ApplicationStartingEvent.class, ApplicationEnvironmentPreparedEvent.class, ApplicationPreparedEvent.class, ContextClosedEvent.class,
+		// ApplicationFailedEvent.class
 		return isAssignableFrom(resolvableType.getRawClass(), EVENT_TYPES);
 	}
 
 	@Override
 	public boolean supportsSourceType(Class<?> sourceType) {
+		// 判断SourceType的来源
+		// SpringApplication.class, ApplicationContext.class
 		return isAssignableFrom(sourceType, SOURCE_TYPES);
 	}
 
