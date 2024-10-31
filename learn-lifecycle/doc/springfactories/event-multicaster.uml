@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.springframework.context.event.SimpleApplicationEventMulticaster</OriginalElement>
+  <nodes>
+    <node x="-44.5" y="106.0">org.springframework.beans.factory.BeanClassLoaderAware</node>
+    <node x="-117.0" y="-14.0">org.springframework.beans.factory.Aware</node>
+    <node x="99.0" y="166.0">org.springframework.context.event.ApplicationEventMulticaster</node>
+    <node x="-146.5" y="406.0">org.springframework.context.event.SimpleApplicationEventMulticaster</node>
+    <node x="-166.0" y="166.0">org.springframework.beans.factory.BeanFactoryAware</node>
+    <node x="-154.0" y="286.0">org.springframework.context.event.AbstractApplicationEventMulticaster</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.springframework.context.event.AbstractApplicationEventMulticaster" target="org.springframework.beans.factory.BeanFactoryAware" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="12.0" y="220.0" />
+      <point x="-68.0" y="220.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.beans.factory.BeanFactoryAware" target="org.springframework.beans.factory.Aware" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.context.event.AbstractApplicationEventMulticaster" target="org.springframework.context.event.ApplicationEventMulticaster" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="12.0" y="220.0" />
+      <point x="232.0" y="220.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.beans.factory.BeanClassLoaderAware" target="org.springframework.beans.factory.Aware" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="72.0" y="80.0" />
+      <point x="-68.0" y="80.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.context.event.AbstractApplicationEventMulticaster" target="org.springframework.beans.factory.BeanClassLoaderAware" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="12.0" y="220.0" />
+      <point x="72.0" y="220.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.context.event.SimpleApplicationEventMulticaster" target="org.springframework.context.event.AbstractApplicationEventMulticaster" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.5" showDependencies="false" x="99.50000000000006" y="210.00000000000003" />
+  <SelectedNodes>
+    <node>org.springframework.context.event.SimpleApplicationEventMulticaster</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

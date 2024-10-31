@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent</OriginalElement>
+  <nodes>
+    <node x="315.5" y="406.0">org.springframework.boot.context.event.SpringApplicationEvent</node>
+    <node x="37.0" y="526.0">org.springframework.boot.context.event.ApplicationReadyEvent</node>
+    <node x="750.0" y="586.0">org.springframework.boot.context.event.ApplicationStartingEvent</node>
+    <node x="-174.0" y="586.0">org.springframework.boot.context.event.ApplicationPreparedEvent</node>
+    <node x="-159.5" y="286.0">org.springframework.context.ApplicationEvent</node>
+    <node x="473.0" y="526.0">org.springframework.boot.context.event.ApplicationContextInitializedEvent</node>
+    <node x="-46.5" y="226.0">java.lang.SuppressWarnings</node>
+    <node x="-141.0" y="106.0">java.util.EventObject</node>
+    <node x="197.0" y="586.0">org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent</node>
+    <node x="-137.5" y="-14.0">java.io.Serializable</node>
+    <node x="1152.5" y="586.0">org.springframework.boot.context.event.ApplicationStartedEvent</node>
+    <node x="957.5" y="526.0">org.springframework.boot.context.event.ApplicationFailedEvent</node>
+    <node x="-174.0" y="406.0">org.springframework.context.event.ContextClosedEvent</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.springframework.boot.context.event.ApplicationFailedEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="56.75" y="-14.0" />
+      <point x="1127.75" y="480.0" />
+      <point x="1131.0" y="480.0" />
+      <point x="1131.0" y="360.0" />
+      <point x="51.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.context.ApplicationEvent" target="java.util.EventObject" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationContextInitializedEvent" target="org.springframework.boot.context.event.SpringApplicationEvent" relationship="GENERALIZATION">
+      <point x="-79.0" y="-14.0" />
+      <point x="552.0" y="500.0" />
+      <point x="431.0" y="500.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationFailedEvent" target="org.springframework.boot.context.event.SpringApplicationEvent" relationship="GENERALIZATION">
+      <point x="-56.75" y="-14.0" />
+      <point x="1014.25" y="500.0" />
+      <point x="431.0" y="500.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationStartingEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="60.5" y="-14.0" />
+      <point x="931.5" y="480.0" />
+      <point x="931.0" y="480.0" />
+      <point x="931.0" y="360.0" />
+      <point x="51.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationPreparedEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="-62.5" y="-14.0" />
+      <point x="-111.5" y="480.0" />
+      <point x="51.0" y="480.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationStartedEvent" target="org.springframework.boot.context.event.SpringApplicationEvent" relationship="GENERALIZATION">
+      <point x="-59.25" y="-14.0" />
+      <point x="1211.75" y="500.0" />
+      <point x="431.0" y="500.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationReadyEvent" target="org.springframework.boot.context.event.SpringApplicationEvent" relationship="GENERALIZATION">
+      <point x="57.0" y="-14.0" />
+      <point x="208.0" y="500.0" />
+      <point x="431.0" y="500.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.context.event.ContextClosedEvent" target="org.springframework.context.ApplicationEvent" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent" target="org.springframework.boot.context.event.SpringApplicationEvent" relationship="GENERALIZATION">
+      <point x="87.0" y="-14.0" />
+      <point x="458.0" y="500.0" />
+      <point x="431.0" y="500.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.SpringApplicationEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="57.75" y="-14.0" />
+      <point x="488.75" y="360.0" />
+      <point x="51.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.SpringApplicationEvent" target="org.springframework.context.ApplicationEvent" relationship="GENERALIZATION">
+      <point x="-57.75" y="-14.0" />
+      <point x="373.25" y="380.0" />
+      <point x="-69.0" y="380.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationStartingEvent" target="org.springframework.boot.context.event.SpringApplicationEvent" relationship="GENERALIZATION">
+      <point x="-60.5" y="-14.0" />
+      <point x="810.5" y="500.0" />
+      <point x="431.0" y="500.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="-87.0" y="-14.0" />
+      <point x="284.0" y="480.0" />
+      <point x="291.0" y="480.0" />
+      <point x="291.0" y="360.0" />
+      <point x="51.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationContextInitializedEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="79.0" y="-14.0" />
+      <point x="710.0" y="480.0" />
+      <point x="711.0" y="480.0" />
+      <point x="711.0" y="360.0" />
+      <point x="51.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationStartedEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="59.25" y="-14.0" />
+      <point x="1330.25" y="560.0" />
+      <point x="1331.0" y="560.0" />
+      <point x="1331.0" y="360.0" />
+      <point x="51.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="java.util.EventObject" target="java.io.Serializable" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationPreparedEvent" target="org.springframework.boot.context.event.SpringApplicationEvent" relationship="GENERALIZATION">
+      <point x="62.5" y="-14.0" />
+      <point x="13.5" y="500.0" />
+      <point x="431.0" y="500.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.event.ApplicationReadyEvent" target="java.lang.SuppressWarnings" relationship="REALIZATION">
+      <point x="-57.0" y="-14.0" />
+      <point x="94.0" y="480.0" />
+      <point x="91.0" y="480.0" />
+      <point x="91.0" y="360.0" />
+      <point x="51.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.9570707070707072" showDependencies="false" x="494.70712401055414" y="315.2242744063323" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

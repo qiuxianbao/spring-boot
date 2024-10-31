@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer</OriginalElement>
+  <nodes>
+    <node x="1285.0" y="166.0">org.springframework.core.Ordered</node>
+    <node x="691.5" y="466.0">org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer</node>
+    <node x="1169.0" y="466.0">org.springframework.boot.context.ContextIdApplicationContextInitializer</node>
+    <node x="941.5" y="46.0">java.lang.FunctionalInterface</node>
+    <node x="224.5" y="466.0">org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer</node>
+    <node x="437.5" y="406.0">org.springframework.boot.context.ConfigurationWarningsApplicationContextInitializer</node>
+    <node x="11.5" y="406.0">org.springframework.boot.web.context.ServerPortInfoApplicationContextInitializer</node>
+    <node x="1072.0" y="-14.0">org.springframework.context.ConfigurableApplicationContext</node>
+    <node x="-210.0" y="466.0">org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener</node>
+    <node x="989.0" y="226.0">org.springframework.context.ApplicationContextInitializer</node>
+    <node x="965.5" y="406.0">org.springframework.boot.context.config.DelegatingApplicationContextInitializer</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer" target="org.springframework.core.Ordered" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="901.0" y="340.0" />
+      <point x="1341.0" y="340.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.config.DelegatingApplicationContextInitializer" target="org.springframework.context.ApplicationContextInitializer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.web.context.ServerPortInfoApplicationContextInitializer" target="org.springframework.context.ApplicationContextInitializer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="201.0" y="300.0" />
+      <point x="1141.0" y="300.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.context.ApplicationContextInitializer" target="org.springframework.context.ConfigurableApplicationContext" relationship="DEPENDENCY">
+      <point x="76.0" y="-14.0" />
+      <point x="1217.0" y="200.0" />
+      <point x="1221.0" y="200.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener" target="org.springframework.context.ApplicationContextInitializer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="-19.0" y="300.0" />
+      <point x="1141.0" y="300.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.ContextIdApplicationContextInitializer" target="org.springframework.context.ApplicationContextInitializer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1341.0" y="360.0" />
+      <point x="1141.0" y="360.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.context.ApplicationContextInitializer" target="java.lang.FunctionalInterface" relationship="REALIZATION">
+      <point x="-76.0" y="-14.0" />
+      <point x="1065.0" y="200.0" />
+      <point x="1041.0" y="200.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer" target="org.springframework.context.ApplicationContextInitializer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="421.0" y="300.0" />
+      <point x="1141.0" y="300.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.ConfigurationWarningsApplicationContextInitializer" target="org.springframework.context.ApplicationContextInitializer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="661.0" y="300.0" />
+      <point x="1141.0" y="300.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.config.DelegatingApplicationContextInitializer" target="org.springframework.core.Ordered" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1141.0" y="380.0" />
+      <point x="1341.0" y="380.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer" target="org.springframework.context.ApplicationContextInitializer" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="901.0" y="320.0" />
+      <point x="1141.0" y="320.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.springframework.boot.context.ContextIdApplicationContextInitializer" target="org.springframework.core.Ordered" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.8777969018932874" showDependencies="false" x="651.5000000000001" y="240.00000000000006" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
