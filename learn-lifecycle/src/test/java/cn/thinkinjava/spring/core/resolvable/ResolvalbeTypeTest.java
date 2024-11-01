@@ -9,9 +9,10 @@ import org.springframework.core.ResolvableType;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -35,6 +36,30 @@ public class ResolvalbeTypeTest {
 	private Map<String, Map<String, Integer>> map;
 	private List<String>[] array;
 
+	/**
+	 * 判断是否继承自某个类或者实现某个接口
+	 * @see Class#isAssignableFrom(Class)
+	 * @see Class#asSubclass(Class)
+	 *
+	 * @see instanceof
+	 */
+	@Test
+	public void testJDK() {
+		// 判断是否继承自某个类或者实现某个接口
+		System.out.println(List.class.isAssignableFrom(ArrayList.class));    // true
+		System.out.println(String.class.isAssignableFrom(ArrayList.class));  // false
+
+		//
+		List<String> strList = new ArrayList<String>();
+		// class java.util.ArrayList
+		Class<? extends List> strList_cast = strList.getClass().asSubclass(List.class);
+		System.out.println(strList_cast);
+
+		// 用于检查对象实例类型
+		System.out.println(strList instanceof List);
+		System.out.println(strList instanceof Map);
+	}
+
 	@Test
 	public void testSpring() {
 		DefaultBootstrapContext bootstrapContext = new DefaultBootstrapContext();
@@ -45,6 +70,22 @@ public class ResolvalbeTypeTest {
 		// System.out.println(resolvableType);
 	}
 
+	/**
+	 * 获取接口
+	 * @see ResolvableType#getInterfaces()
+	 *
+	 * 获取父类
+	 * @see ResolvableType#getSuperType()
+	 * @see ResolvableType#asMap()
+	 *
+	 * 向上转型
+	 * @see ResolvableType#as(Class)
+	 *
+	 * @see ResolvableType#getRawClass()
+	 *
+	 * @see ResolvableType#forClassWithGenerics(Class, Class[])
+	 *
+	 */
 	@Test
 	public void test() {
 		// HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneable, Serializable
@@ -100,6 +141,13 @@ public class ResolvalbeTypeTest {
 		Assertions.assertTrue(ResolvableType.forClass(Object.class).isAssignableFrom(ResolvableType.forClass(String.class)));
 	}
 
+	/**
+	 * 一般方法
+	 * @see ResolvableType#forMethodReturnType(Method)
+	 *
+	 * 构造方法
+	 * @see ResolvableType#forConstructorParameter(Constructor, int)
+	 */
 	@Test
 	public void forMethodTest() {
 		// 1. 方法的返回值类型 private Map<Float, Map<Double, Integer>> method() {}
@@ -120,16 +168,30 @@ public class ResolvalbeTypeTest {
 		Assertions.assertEquals(Integer.class, parameterType.getGeneric(1, 1).resolve());
 	}
 
+
+	/**
+	 * JDK
+	 * @see Field#getGenericType()
+	 * @see Field#getDeclaringClass()
+	 *
+	 * Spring
+	 * @see ResolvableType#forField(Field)
+	 * @see ResolvableType#getGeneric(int...)
+	 *
+	 * 参数类型
+	 * @see ParameterizedType#getRawType()
+	 *
+	 * 数组类型
+	 * @see ResolvableType#getComponentType()
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void forFieldTest() throws Exception {
 		// 1. Service<Double, Float> service
 		Field filed = ReflectionUtils.findField(getClass(), "service");
 		// private cn.thinkinjava.spring.core.resolvable.Service cn.thinkinjava.spring.core.resolvable.ResolvalbeTypeTest.service
 		System.out.println("filed \t" + filed);
-
-		Type genericType = filed.getGenericType();
-		// cn.thinkinjava.spring.core.resolvable.resolvable.Service<java.lang.Double, java.lang.Float>
-		System.out.println("getGenericType \t" + genericType);
 
 		Class<?> declaringClass = filed.getDeclaringClass();
 		// class cn.thinkinjava.spring.core.resolvable.ResolvalbeTypeTest
@@ -184,6 +246,12 @@ public class ResolvalbeTypeTest {
 		Assertions.assertEquals(String.class, resolvableTypeArray.getComponentType().getGeneric(0).resolve());
 	}
 
+	/**
+	 * @see ResolvableType#forClass(Class)
+	 *
+	 * @see ResolvableType#getType()
+	 * @see ResolvableType#resolve()
+	 */
 	@Test
 	public void forClassTest() {
 		ResolvableType resolvableType = ResolvableType.forClass(ServiceImpl.class);
