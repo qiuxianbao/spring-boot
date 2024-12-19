@@ -91,6 +91,7 @@ public class Instantiator<T> {
 	}
 
 	/**
+	 * 给一个类名，通过构造方式实例化
 	 * Instantiate the given set of class name, injecting constructor arguments as
 	 * necessary.
 	 * @param classLoader the source classloader
@@ -111,10 +112,12 @@ public class Instantiator<T> {
 	 */
 	public List<T> instantiateTypes(Collection<Class<?>> types) {
 		Assert.notNull(types, "Types must not be null");
+		// 实例化
 		return instantiate(types.stream().map(TypeSupplier::forType));
 	}
 
 	private List<T> instantiate(Stream<TypeSupplier> typeSuppliers) {
+		// 循环调用 this::instantiate
 		List<T> instances = typeSuppliers.map(this::instantiate).collect(Collectors.toList());
 		AnnotationAwareOrderComparator.sort(instances);
 		return Collections.unmodifiableList(instances);
@@ -134,12 +137,15 @@ public class Instantiator<T> {
 
 	@SuppressWarnings("unchecked")
 	private T instantiate(Class<?> type) throws Exception {
+		// 构造方法
 		Constructor<?>[] constructors = type.getDeclaredConstructors();
 		Arrays.sort(constructors, CONSTRUCTOR_COMPARATOR);
 		for (Constructor<?> constructor : constructors) {
+			// 构造方法参数
 			Object[] args = getArgs(constructor.getParameterTypes());
 			if (args != null) {
 				ReflectionUtils.makeAccessible(constructor);
+				// 实例化
 				return (T) constructor.newInstance(args);
 			}
 		}
@@ -153,6 +159,7 @@ public class Instantiator<T> {
 			if (parameter == null) {
 				return null;
 			}
+			// 从参数类型列表中得到真正的参数
 			args[i] = parameter.apply(this.type);
 		}
 		return args;

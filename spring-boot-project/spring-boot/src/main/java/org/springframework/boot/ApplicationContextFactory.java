@@ -19,6 +19,7 @@ package org.springframework.boot;
 import java.util.function.Supplier;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.support.SpringFactoriesLoader;
@@ -40,11 +41,15 @@ public interface ApplicationContextFactory {
 	 * A default {@link ApplicationContextFactory} implementation that will create an
 	 * appropriate context for the {@link WebApplicationType}.
 	 */
-	// TODO-QIU: 2024年10月18日, 0018 GenericWebApplicationContext 怎么创建的
 	ApplicationContextFactory DEFAULT = (webApplicationType) -> {
 		try {
 			for (ApplicationContextFactory candidate : SpringFactoriesLoader
 					.loadFactories(ApplicationContextFactory.class, ApplicationContextFactory.class.getClassLoader())) {
+				/**
+				 * 新版本多了1个 ApplicationContextFactory
+				 * 此处会创建 BeanFactory
+				 * @see AnnotationConfigServletWebServerApplicationContext
+				 */
 				ConfigurableApplicationContext context = candidate.create(webApplicationType);
 				if (context != null) {
 					return context;

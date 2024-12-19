@@ -30,11 +30,16 @@ import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.boot.Banner.Mode;
+import org.springframework.boot.context.FileEncodingApplicationListener;
+import org.springframework.boot.context.config.AnsiOutputApplicationListener;
+import org.springframework.boot.context.config.DelegatingApplicationListener;
 import org.springframework.boot.context.event.EventPublishingRunListener;
+import org.springframework.boot.context.logging.LoggingApplicationListener;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
 import org.springframework.boot.convert.ApplicationConversionService;
+import org.springframework.boot.env.EnvironmentPostProcessorApplicationListener;
 import org.springframework.boot.web.reactive.context.AnnotationConfigReactiveWebServerApplicationContext;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
@@ -42,10 +47,12 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.*;
+import org.springframework.context.event.AbstractApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.Ordered;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.*;
@@ -54,6 +61,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.util.*;
+import org.springframework.web.context.support.StandardServletEnvironment;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -378,12 +386,22 @@ public class SpringApplication {
 		 * size = 1
 		 */
 		SpringApplicationRunListeners listeners = getRunListeners(args);
-		// 正在启动
+
+		/**
+		 * 广播一个 ApplicationStartingEvent 事件
+		 * 从8个ApplicationListener中，进行过滤。具体逻辑参见：
+		 * @see AbstractApplicationEventMulticaster#retrieveApplicationListeners(ResolvableType, Class, AbstractApplicationEventMulticaster.CachedListenerRetriever)
+		 *
+		 * 有3个是 ApplicationStartingEvent 的订阅者
+		 * @see LoggingApplicationListener
+		 * @see org.springframework.boot.autoconfigure.BackgroundPreinitializer
+		 * @see DelegatingApplicationListener
+		 */
 		listeners.starting(bootstrapContext, this.mainApplicationClass);
 		try {
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
 
-			// 准备【环境】
+			// 准备【环境】，包括配置文件加载
 			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
 			configureIgnoreBeanInfo(environment);
 			Banner printedBanner = printBanner(environment);
@@ -393,12 +411,15 @@ public class SpringApplication {
 			context.setApplicationStartup(this.applicationStartup);
 
 			// 准备 【应用上下文】
+			// TODO-QIU: 2024年11月14日, 0012
 			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
 
 			// 刷新 【应用上下文】
+			// TODO-QIU: 2024年11月18日, 0012
 			refreshContext(context);
 
 			// 【应用上下文】刷新后处理
+			// TODO-QIU: 2024年11月25日, 0012
 			afterRefresh(context, applicationArguments);
 			stopWatch.stop();
 			if (this.logStartupInfo) {
@@ -438,18 +459,70 @@ public class SpringApplication {
 
 	private ConfigurableEnvironment prepareEnvironment(SpringApplicationRunListeners listeners,
 			DefaultBootstrapContext bootstrapContext, ApplicationArguments applicationArguments) {
-		// Create and configure the environment
+		/**
+		 * 创建环境，初始化 servlet 和 system 的环境变量
+		 * propertySourceList, size=4
+		 *
+		 * 有顺序，addLast
+		 * 0	StubPropertySource {name='servletConfigInitParams'}			占位符		name, new Object()
+		 * 1	StubPropertySource {name='servletContextInitParams'}		占位符
+		 * 2	PropertiesPropertySource {name='systemProperties'}						name, Map<String, Object>
+		 * 3	SystemEnvironmentPropertySource {name='systemEnvironment'}
+		 */
 		ConfigurableEnvironment environment = getOrCreateEnvironment();
+
+		// 添加转换器
+		// 处理args参数: commandLineArgs、properties
 		configureEnvironment(environment, applicationArguments.getSourceArgs());
+
+		/**
+		 * 在 environment 的头部添加(如果存在则先删除)
+		 * ConfigurationPropertySourcesPropertySource {name='configurationProperties'}
+		 * @see org.springframework.boot.context.properties.source.SpringConfigurationPropertySources#sources
+		 *
+		 * propertySourceList, size=5
+		 */
 		ConfigurationPropertySources.attach(environment);
+
+		/**
+		 * 广播一个 ApplicationEnvironmentPreparedEvent 事件
+		 * propertySourceList, size=7
+		 *
+		 * 0 = {ConfigurationPropertySourcesPropertySource@3024} "ConfigurationPropertySourcesPropertySource@1110698130 {name='configurationProperties', properties=org.springframework.boot.context.properties.source.SpringConfigurationPropertySources@77d2e85}"
+		 * 1 = {PropertySource$StubPropertySource@3025} "StubPropertySource@1053632127 {name='servletConfigInitParams', properties=java.lang.Object@58ffcbd7}"
+		 * 2 = {PropertySource$StubPropertySource@3026} "StubPropertySource@89509666 {name='servletContextInitParams', properties=java.lang.Object@6bb2d00b}"
+		 * 3 = {PropertiesPropertySource@3027} "PropertiesPropertySource@1016856028 {name='systemProperties', properties={sun.desktop=windows, awt.toolkit=sun.awt.windows.WToolkit, java.specification.version=11, sun.cpu.isalist=amd64, sun.jnu.encoding=GBK, java.class.path=C:\gradle\spring-boot\learn-lifecycle\build\classes\java\main;C:\gradle\spring-boot\learn-lifecycle\build\resources\main;C:\gradle\spring-boot\spring-boot-project\spring-boot-starters\spring-boot-starter-web\build\libs\spring-boot-starter-web-2.5.16-SNAPSHOT.jar;C:\gradle\spring-boot\spring-boot-project\spring-boot-starters\spring-boot-starter-json\build\libs\spring-boot-starter-json-2.5.16-SNAPSHOT.jar;C:\gradle\spring-boot\spring-boot-project\spring-boot-starters\spring-boot-starter\build\libs\spring-boot-starter-2.5.16-SNAPSHOT.jar;C:\gradle\spring-boot\spring-boot-project\spring-boot-autoconfigure\build\libs\spring-boot-autoconfigure-2.5.16-SNAPSHOT.jar;C:\gradle\spring-boot\spring-boot-project\spring-boot\build\libs\spring-boot-2.5.16-SNAPSHOT.jar;C:\Users\adm"
+		 * 4 = {SystemEnvironmentPropertySourceEnvironmentPostProcessor$OriginAwareSystemEnvironmentPropertySource@3028} "OriginAwareSystemEnvironmentPropertySource@446445803 {name='systemEnvironment', properties={USERDOMAIN_ROAMINGPROFILE=LAPTOP-ROP3B248, PROCESSOR_LEVEL=6, RegionCode=APJ, SESSIONNAME=Console, ALLUSERSPROFILE=C:\ProgramData, PROCESSOR_ARCHITECTURE=AMD64, PSModulePath=C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules, SystemDrive=C:, MAVEN_HOME=C:\Java\Maven\apache-maven-3.8.1, USERNAME=admin, NODE_JS_HOME=C:\Java\node-v18.15.0, ProgramFiles(x86)=C:\Program Files (x86), FPS_BROWSER_USER_PROFILE_STRING=Default, PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC, DriverData=C:\Windows\System32\Drivers\DriverData, platformcode=KV, ProgramData=C:\ProgramData, ProgramW6432=C:\Program Files, HOMEPATH=\Users\admin, PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 140 Stepping 1, GenuineIntel, ProgramFiles=C:\Program Files, PUBLIC=C:\Users\Public, windir=C:\Windows, =::=::\, OPENSSL_HOME=C:\Java\OpenSSL-Win64, ZES_ENABLE_SYSMAN=1, LOCALAPPDATA=C:\"
+		 *
+		 * 5 = {RandomValuePropertySource@3029} "RandomValuePropertySource@832292933 {name='random', properties=java.util.Random@4c5474f5}"
+		 * 6 = {OriginTrackedMapPropertySource@3030} "OriginTrackedMapPropertySource@792855998 {name='Config resource 'class path resource [application.yml]' via location 'optional:classpath:/'', properties={server.port=8080, spring.application.name=spring-lifecycle, management.port=9209, management.endpoints.web.exposure.include=*}}"
+		 *
+		 * 系统的相关属性参见
+		 * @see cn.thinkinjava.SystemTest
+		 *
+		 *
+		 * 从8个ApplicationListener中，进行过滤。具体逻辑参见：
+		 * @see AbstractApplicationEventMulticaster#retrieveApplicationListeners(ResolvableType, Class, AbstractApplicationEventMulticaster.CachedListenerRetriever)
+		 *
+		 * 有6个是 ApplicationEnvironmentPreparedEvent 的订阅者
+		 * @see EnvironmentPostProcessorApplicationListener		[*]
+		 * @see AnsiOutputApplicationListener
+		 * @see LoggingApplicationListener
+		 * @see org.springframework.boot.autoconfigure.BackgroundPreinitializer
+		 * @see DelegatingApplicationListener
+		 * @see FileEncodingApplicationListener
+		 */
 		listeners.environmentPrepared(bootstrapContext, environment);
+
 		DefaultPropertiesPropertySource.moveToEnd(environment);
 		Assert.state(!environment.containsProperty("spring.main.environment-prefix"),
 				"Environment prefix cannot be set via properties.");
 		bindToSpringApplication(environment);
 		if (!this.isCustomEnvironment) {
+			// 转换
 			environment = convertEnvironment(environment);
 		}
+
 		ConfigurationPropertySources.attach(environment);
 		return environment;
 	}
@@ -520,6 +593,7 @@ public class SpringApplication {
 	}
 
 	private void configureHeadlessProperty() {
+		// awt
 		System.setProperty(SYSTEM_PROPERTY_JAVA_AWT_HEADLESS,
 				System.getProperty(SYSTEM_PROPERTY_JAVA_AWT_HEADLESS, Boolean.toString(this.headless)));
 	}
@@ -553,9 +627,31 @@ public class SpringApplication {
 		return instances;
 	}
 
+	private ConfigurableEnvironment getOrCreateEnvironment() {
+		if (this.environment != null) {
+			return this.environment;
+		}
+		switch (this.webApplicationType) {
+		case SERVLET:
+			/**
+			 * 默认空参构造会调用父类的空参构造 super()
+			 * 继承了 spring-web.jar 中 StandardServletEnvironment
+			 * @see StandardServletEnvironment
+			 *
+			 * 核心逻辑在
+			 * @see org.springframework.core.env.AbstractEnvironment#AbstractEnvironment()
+			 */
+			return new ApplicationServletEnvironment();
+		case REACTIVE:
+			return new ApplicationReactiveWebEnvironment();
+		default:
+			return new ApplicationEnvironment();
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private <T> List<T> createSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes,
-			ClassLoader classLoader, Object[] args, Set<String> names) {
+													   ClassLoader classLoader, Object[] args, Set<String> names) {
 		// 技巧：如果明确知道大小，就进行初始化
 		List<T> instances = new ArrayList<>(names.size());
 		for (String name : names) {
@@ -574,20 +670,6 @@ public class SpringApplication {
 		return instances;
 	}
 
-	private ConfigurableEnvironment getOrCreateEnvironment() {
-		if (this.environment != null) {
-			return this.environment;
-		}
-		switch (this.webApplicationType) {
-		case SERVLET:
-			return new ApplicationServletEnvironment();
-		case REACTIVE:
-			return new ApplicationReactiveWebEnvironment();
-		default:
-			return new ApplicationEnvironment();
-		}
-	}
-
 	/**
 	 * Template method delegating to
 	 * {@link #configurePropertySources(ConfigurableEnvironment, String[])} and
@@ -601,9 +683,13 @@ public class SpringApplication {
 	 */
 	protected void configureEnvironment(ConfigurableEnvironment environment, String[] args) {
 		if (this.addConversionService) {
+			// 初始化转换器
 			environment.setConversionService(new ApplicationConversionService());
 		}
+
+		// commandLineArgs
 		configurePropertySources(environment, args);
+		// TODO-QIU: 2024年12月11日, 0011 空实现
 		configureProfiles(environment, args);
 	}
 
@@ -671,6 +757,8 @@ public class SpringApplication {
 		if (this.bannerMode == Banner.Mode.OFF) {
 			return null;
 		}
+
+		// 设置resourceLoader
 		ResourceLoader resourceLoader = (this.resourceLoader != null) ? this.resourceLoader
 				: new DefaultResourceLoader(null);
 		SpringApplicationBannerPrinter bannerPrinter = new SpringApplicationBannerPrinter(resourceLoader, this.banner);
@@ -689,6 +777,10 @@ public class SpringApplication {
 	 * @see #setApplicationContextFactory(ApplicationContextFactory)
 	 */
 	protected ConfigurableApplicationContext createApplicationContext() {
+		/**
+		 * 默认工场种根据 webApplicationType 创建出相应的上下文，没有则new一个AnnotationConfigApplicationContext
+		 * @see AnnotationConfigApplicationContext
+		 */
 		return this.applicationContextFactory.create(this.webApplicationType);
 	}
 
@@ -711,6 +803,7 @@ public class SpringApplication {
 			}
 		}
 		if (this.addConversionService) {
+			//
 			context.getBeanFactory().setConversionService(context.getEnvironment().getConversionService());
 		}
 	}

@@ -51,15 +51,22 @@ public interface Origin {
 	}
 
 	/**
+	 * 接口中
+	 * 可以有默认方法实现、
+	 * 可以有静态方法实现
+	 *
 	 * Find the {@link Origin} that an object originated from. Checks if the source object
 	 * is an {@link Origin} or {@link OriginProvider} and also searches exception stacks.
 	 * @param source the source object or {@code null}
 	 * @return an optional {@link Origin}
 	 */
 	static Origin from(Object source) {
+		// 本身是Origin，直接返回
 		if (source instanceof Origin) {
 			return (Origin) source;
 		}
+
+		// 如果是 OriginProvider，则调用 getOrigin()
 		Origin origin = null;
 		if (source instanceof OriginProvider) {
 			origin = ((OriginProvider) source).getOrigin();

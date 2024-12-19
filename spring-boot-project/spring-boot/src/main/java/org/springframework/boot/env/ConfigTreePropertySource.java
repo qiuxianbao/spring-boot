@@ -214,6 +214,7 @@ public class ConfigTreePropertySource extends EnumerablePropertySource<Path> imp
 								propertyFiles.put(name, new PropertyFile(path, options));
 							}
 						});
+				// 学习：不可变集合
 				return Collections.unmodifiableMap(propertyFiles);
 			}
 			catch (IOException ex) {

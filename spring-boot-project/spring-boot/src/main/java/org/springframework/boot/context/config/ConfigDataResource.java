@@ -27,6 +27,9 @@ package org.springframework.boot.context.config;
  */
 public abstract class ConfigDataResource {
 
+	/**
+	 * 如果是true，必须实现equals和hashCode方法
+	 */
 	private final boolean optional;
 
 	/**

@@ -78,11 +78,14 @@ class ConfigDataImporter {
 	 * @return a map of the loaded locations and data
 	 */
 	Map<ConfigDataResolutionResult, ConfigData> resolveAndLoad(ConfigDataActivationContext activationContext,
-			ConfigDataLocationResolverContext locationResolverContext, ConfigDataLoaderContext loaderContext,
-			List<ConfigDataLocation> locations) {
+															   ConfigDataLocationResolverContext locationResolverContext, ConfigDataLoaderContext loaderContext,
+															   List<ConfigDataLocation> locations) {
 		try {
 			Profiles profiles = (activationContext != null) ? activationContext.getProfiles() : null;
+			// 扫描，会进行合并
+			// TODO-QIU: 2024年11月27日, 0027 为什么是 .yaml
 			List<ConfigDataResolutionResult> resolved = resolve(locationResolverContext, profiles, locations);
+			// 加载
 			return load(loaderContext, resolved);
 		}
 		catch (IOException ex) {

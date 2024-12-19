@@ -72,6 +72,7 @@ public class RandomValuePropertySource extends PropertySource<Random> {
 	private static final Log logger = LogFactory.getLog(RandomValuePropertySource.class);
 
 	public RandomValuePropertySource() {
+		// 初始化
 		this(RANDOM_PROPERTY_SOURCE_NAME);
 	}
 

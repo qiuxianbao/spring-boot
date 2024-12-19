@@ -41,6 +41,7 @@ class ApplicationServletEnvironment extends StandardServletEnvironment {
 
 	@Override
 	protected ConfigurablePropertyResolver createPropertyResolver(MutablePropertySources propertySources) {
+		// 父类会进行回调
 		return ConfigurationPropertySources.createPropertyResolver(propertySources);
 	}
 

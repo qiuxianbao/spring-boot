@@ -72,6 +72,8 @@ public class ConfigDataEnvironmentPostProcessor implements EnvironmentPostProces
 
 	public ConfigDataEnvironmentPostProcessor(DeferredLogFactory logFactory,
 			ConfigurableBootstrapContext bootstrapContext) {
+		// parameters.add(DeferredLogFactory.class, logFactory);
+		// parameters.add(BootstrapContext.class, bootstrapContext);
 		this(logFactory, bootstrapContext, null);
 	}
 
@@ -81,6 +83,7 @@ public class ConfigDataEnvironmentPostProcessor implements EnvironmentPostProces
 		this.logFactory = logFactory;
 		this.logger = logFactory.getLog(getClass());
 		this.bootstrapContext = bootstrapContext;
+		// null
 		this.environmentUpdateListener = environmentUpdateListener;
 	}
 
@@ -98,7 +101,9 @@ public class ConfigDataEnvironmentPostProcessor implements EnvironmentPostProces
 			Collection<String> additionalProfiles) {
 		try {
 			this.logger.trace("Post-processing environment to add config data");
+			// 设置资源类加载器
 			resourceLoader = (resourceLoader != null) ? resourceLoader : new DefaultResourceLoader();
+			// 创建并应用
 			getConfigDataEnvironment(environment, resourceLoader, additionalProfiles).processAndApply();
 		}
 		catch (UseLegacyConfigProcessingException ex) {
@@ -109,6 +114,13 @@ public class ConfigDataEnvironmentPostProcessor implements EnvironmentPostProces
 		}
 	}
 
+	/**
+	 * 创建
+	 * @param environment
+	 * @param resourceLoader
+	 * @param additionalProfiles
+	 * @return
+	 */
 	ConfigDataEnvironment getConfigDataEnvironment(ConfigurableEnvironment environment, ResourceLoader resourceLoader,
 			Collection<String> additionalProfiles) {
 		return new ConfigDataEnvironment(this.logFactory, this.bootstrapContext, environment, resourceLoader,

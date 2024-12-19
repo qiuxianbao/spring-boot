@@ -171,6 +171,7 @@ public class TextResourceOrigin implements Origin {
 			}
 			Location other = (Location) obj;
 			boolean result = true;
+			// 比较行列号
 			result = result && this.line == other.line;
 			result = result && this.column == other.column;
 			return result;

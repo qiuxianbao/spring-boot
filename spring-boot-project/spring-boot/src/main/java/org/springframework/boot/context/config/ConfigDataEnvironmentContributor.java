@@ -242,6 +242,8 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 		if (properties != null && this.configDataOptions.contains(ConfigData.Option.IGNORE_IMPORTS)) {
 			properties = properties.withoutImports();
 		}
+
+		//
 		return new ConfigDataEnvironmentContributor(Kind.BOUND_IMPORT, this.location, this.resource,
 				this.fromProfileSpecificImport, this.propertySource, this.configurationPropertySource, properties,
 				this.configDataOptions, null);

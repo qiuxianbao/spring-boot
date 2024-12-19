@@ -142,6 +142,7 @@ public final class ConfigDataLocation implements OriginProvider {
 
 	@Override
 	public String toString() {
+		// Always include the optional prefix
 		return (!this.optional) ? this.value : OPTIONAL_PREFIX + this.value;
 	}
 

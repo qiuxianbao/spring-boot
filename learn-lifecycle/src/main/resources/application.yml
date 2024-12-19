@@ -1,9 +1,15 @@
-server:
-  port: 8080
+#server:
+#  port: 8080
 
 spring:
   application:
     name: spring-lifecycle
+#  config:
+#    name: common,special #application
+#    profile: ${spring.profiles.active}  #profile 测试这个
+
+#  profiles:
+#    active: dev
 
 management:
   port: 9209

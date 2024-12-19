@@ -50,6 +50,7 @@ class ConfigDataEnvironmentContributorPlaceholdersResolver implements Placeholde
 		this.activationContext = activationContext;
 		this.activeContributor = activeContributor;
 		this.failOnResolveFromInactiveContributor = failOnResolveFromInactiveContributor;
+		// 工具类
 		this.helper = new PropertyPlaceholderHelper(SystemPropertyUtils.PLACEHOLDER_PREFIX,
 				SystemPropertyUtils.PLACEHOLDER_SUFFIX, SystemPropertyUtils.VALUE_SEPARATOR, true);
 	}

@@ -84,8 +84,8 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 	 * Processes imports from all active contributors and return a new
 	 * {@link ConfigDataEnvironmentContributors} instance.
 	 * @param importer the importer used to import {@link ConfigData}
-	 * @param activationContext the current activation context or {@code null} if the
-	 * context has not get been created
+	 * @param activationContext the  activation context or {@code null} if the
+	 * context has not get been createdcurrent
 	 * @return a {@link ConfigDataEnvironmentContributors} instance with all relevant
 	 * imports have been processed
 	 */
@@ -97,27 +97,54 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 		ConfigDataEnvironmentContributors result = this;
 		int processed = 0;
 		while (true) {
+			// 循环处理
 			ConfigDataEnvironmentContributor contributor = getNextToProcess(result, activationContext, importPhase);
 			if (contributor == null) {
 				this.logger.trace(LogMessage.format("Processed imports for of %d contributors", processed));
 				return result;
 			}
+
+			/**
+			 * @see Kind.UNBOUND_IMPORT
+			 */
 			if (contributor.getKind() == Kind.UNBOUND_IMPORT) {
 				ConfigDataEnvironmentContributor bound = contributor.withBoundProperties(result, activationContext);
 				result = new ConfigDataEnvironmentContributors(this.logger, this.bootstrapContext,
 						result.getRoot().withReplacement(contributor, bound));
 				continue;
 			}
+
+			/**
+			 * @see Kind.EXISTING
+			 *
+			 * @see Kind.INITIAL_IMPORT
+			 * file:./;optional:file:./config/;optional:file:./config/*
+			 * classpath:/;optional:classpath:/config/
+			 *
+			 * @see Kind.ROOT
+			 */
 			ConfigDataLocationResolverContext locationResolverContext = new ContributorConfigDataLocationResolverContext(
 					result, contributor, activationContext);
+
+			// 创建配置数据加载器上下文
 			ConfigDataLoaderContext loaderContext = new ContributorDataLoaderContext(this);
+
+			// 从 contributor 获取扫描目录
 			List<ConfigDataLocation> imports = contributor.getImports();
 			this.logger.trace(LogMessage.format("Processing imports %s", imports));
+
+			// 扫描并加载
 			Map<ConfigDataResolutionResult, ConfigData> imported = importer.resolveAndLoad(activationContext,
 					locationResolverContext, loaderContext, imports);
 			this.logger.trace(LogMessage.of(() -> getImportedMessage(imported.keySet())));
+
+			/**
+			 * @see Kind.EMPTY_LOCATION
+			 * @see Kind.UNBOUND_IMPORT
+			 */
 			ConfigDataEnvironmentContributor contributorAndChildren = contributor.withChildren(importPhase,
 					asContributors(imported));
+
 			result = new ConfigDataEnvironmentContributors(this.logger, this.bootstrapContext,
 					result.getRoot().withReplacement(contributor, contributorAndChildren));
 			processed++;
@@ -166,6 +193,7 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 			}
 			else {
 				for (int i = data.getPropertySources().size() - 1; i >= 0; i--) {
+					//
 					contributors.add(ConfigDataEnvironmentContributor.ofUnboundImport(location, resource,
 							profileSpecific, data, i));
 				}
@@ -214,6 +242,7 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 		boolean failOnInactiveSource = options.contains(BinderOption.FAIL_ON_BIND_TO_INACTIVE_SOURCE);
 		Iterable<ConfigurationPropertySource> sources = () -> getBinderSources(
 				filter.and((contributor) -> failOnInactiveSource || contributor.isActive(activationContext)));
+		// 创建一个占位符解析器
 		PlaceholdersResolver placeholdersResolver = new ConfigDataEnvironmentContributorPlaceholdersResolver(this.root,
 				activationContext, null, failOnInactiveSource);
 		BindHandler bindHandler = !failOnInactiveSource ? null : new InactiveSourceChecker(activationContext);

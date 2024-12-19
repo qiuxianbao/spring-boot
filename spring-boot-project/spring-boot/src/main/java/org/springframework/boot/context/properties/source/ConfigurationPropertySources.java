@@ -86,9 +86,11 @@ public final class ConfigurationPropertySources {
 	public static void attach(Environment environment) {
 		Assert.isInstanceOf(ConfigurableEnvironment.class, environment);
 		MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();
+		// configurationProperties
 		PropertySource<?> attached = getAttached(sources);
 		if (attached == null || !isUsingSources(attached, sources)) {
 			attached = new ConfigurationPropertySourcesPropertySource(ATTACHED_PROPERTY_SOURCE_NAME,
+					// 把 Spring 中的 MutablePropertySources 包装 boot 中的 ConfigurationPropertySource
 					new SpringConfigurationPropertySources(sources));
 		}
 		sources.remove(ATTACHED_PROPERTY_SOURCE_NAME);

@@ -96,6 +96,7 @@ public class ServerProperties {
 	private String serverHeader;
 
 	/**
+	 * 最大请求头
 	 * Maximum size of the HTTP message header.
 	 */
 	private DataSize maxHttpHeaderSize = DataSize.ofKilobytes(8);

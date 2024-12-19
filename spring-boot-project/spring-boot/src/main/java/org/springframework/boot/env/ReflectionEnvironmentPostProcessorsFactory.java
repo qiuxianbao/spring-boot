@@ -54,12 +54,26 @@ class ReflectionEnvironmentPostProcessorsFactory implements EnvironmentPostProce
 	ReflectionEnvironmentPostProcessorsFactory(ClassLoader classLoader, List<String> classNames) {
 		this.classes = null;
 		this.classLoader = classLoader;
+
+		/**
+		 * spring-boot-autoconfigure.jar
+		 * @see org.springframework.boot.autoconfigure.integration.IntegrationPropertiesEnvironmentPostProcessor
+		 *
+		 * spring-boot.jar
+		 * @see org.springframework.boot.cloud.CloudFoundryVcapEnvironmentPostProcessor,\
+		 * @see org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor,\
+		 * @see org.springframework.boot.env.RandomValuePropertySourceEnvironmentPostProcessor,\
+		 * @see org.springframework.boot.env.SpringApplicationJsonEnvironmentPostProcessor,\
+		 * @see org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor,\
+		 * @see org.springframework.boot.reactor.DebugAgentEnvironmentPostProcessor
+		 */
 		this.classNames = classNames;
 	}
 
 	@Override
 	public List<EnvironmentPostProcessor> getEnvironmentPostProcessors(DeferredLogFactory logFactory,
 			ConfigurableBootstrapContext bootstrapContext) {
+		// 7个names构造方法实例化所需参数
 		Instantiator<EnvironmentPostProcessor> instantiator = new Instantiator<>(EnvironmentPostProcessor.class,
 				(parameters) -> {
 					parameters.add(DeferredLogFactory.class, logFactory);

@@ -102,7 +102,13 @@ class ConfigDataLocationResolvers {
 		if (location == null) {
 			return Collections.emptyList();
 		}
+
+		/**
+		 * @see org.springframework.boot.context.config.ConfigTreeConfigDataLocationResolver
+		 * @see org.springframework.boot.context.config.StandardConfigDataLocationResolver
+		 */
 		for (ConfigDataLocationResolver<?> resolver : getResolvers()) {
+			// 是否可以解析
 			if (resolver.isResolvable(context, location)) {
 				return resolve(resolver, context, location, profiles);
 			}
@@ -112,12 +118,15 @@ class ConfigDataLocationResolvers {
 
 	private List<ConfigDataResolutionResult> resolve(ConfigDataLocationResolver<?> resolver,
 			ConfigDataLocationResolverContext context, ConfigDataLocation location, Profiles profiles) {
+		// none profile,
 		List<ConfigDataResolutionResult> resolved = resolve(location, false, () -> resolver.resolve(context, location));
 		if (profiles == null) {
 			return resolved;
 		}
+		// profile
 		List<ConfigDataResolutionResult> profileSpecific = resolve(location, true,
 				() -> resolver.resolveProfileSpecific(context, location, profiles));
+		// 合并
 		return merge(resolved, profileSpecific);
 	}
 
@@ -126,6 +135,7 @@ class ConfigDataLocationResolvers {
 		List<ConfigDataResource> resources = nonNullList(resolveAction.get());
 		List<ConfigDataResolutionResult> resolved = new ArrayList<>(resources.size());
 		for (ConfigDataResource resource : resources) {
+			// 将location、resource绑定成 result
 			resolved.add(new ConfigDataResolutionResult(location, resource, profileSpecific));
 		}
 		return resolved;

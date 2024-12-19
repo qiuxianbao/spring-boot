@@ -35,10 +35,16 @@ import org.springframework.util.Assert;
  */
 public class DefaultBootstrapContext implements ConfigurableBootstrapContext {
 
+	/**
+	 * 存储Binder
+	 */
 	private final Map<Class<?>, InstanceSupplier<?>> instanceSuppliers = new HashMap<>();
 
 	private final Map<Class<?>, Object> instances = new HashMap<>();
 
+	/**
+	 * 启动时的事件广播器
+	 */
 	private final ApplicationEventMulticaster events = new SimpleApplicationEventMulticaster();
 
 	@Override

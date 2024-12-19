@@ -32,10 +32,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 
+import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.config.LocationResourceLoader.ResourceType;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.env.PropertySourceLoader;
+import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -82,16 +85,32 @@ public class StandardConfigDataLocationResolver
 	 * @param logger the logger to use
 	 * @param binder a binder backed by the initial {@link Environment}
 	 * @param resourceLoader a {@link ResourceLoader} used to load resources
+	 *
+	 * 初始化时构造的该类
+	 * @see ConfigDataEnvironment#ConfigDataEnvironment(DeferredLogFactory, ConfigurableBootstrapContext, ConfigurableEnvironment, ResourceLoader, Collection, ConfigDataEnvironmentUpdateListener)
 	 */
 	public StandardConfigDataLocationResolver(Log logger, Binder binder, ResourceLoader resourceLoader) {
 		this.logger = logger;
+
+		/**
+		 * spring-boot.jar
+		 * @see org.springframework.boot.env.PropertiesPropertySourceLoader,\  文件扩展名是 new String[] { "properties", "xml" };
+		 * @see org.springframework.boot.env.YamlPropertySourceLoader 文件扩展名是 new String[] { "yml", "yaml" }
+		 */
 		this.propertySourceLoaders = SpringFactoriesLoader.loadFactories(PropertySourceLoader.class,
 				getClass().getClassLoader());
 		this.configNames = getConfigNames(binder);
 		this.resourceLoader = new LocationResourceLoader(resourceLoader);
 	}
 
+	/**
+	 * 默认配置文件名称
+	 *
+	 * @param binder
+	 * @return
+	 */
 	private String[] getConfigNames(Binder binder) {
+		// spring.config.name 用于设置 配置文件名称，默认为 application
 		String[] configNames = binder.bind(CONFIG_NAME_PROPERTY, String[].class).orElse(DEFAULT_CONFIG_NAMES);
 		for (String configName : configNames) {
 			validateConfigName(configName);
@@ -116,6 +135,7 @@ public class StandardConfigDataLocationResolver
 	@Override
 	public List<StandardConfigDataResource> resolve(ConfigDataLocationResolverContext context,
 			ConfigDataLocation location) throws ConfigDataNotFoundException {
+		// file:./;optional:file:./config/;optional:file:./config/*/
 		return resolve(getReferences(context, location.split()));
 	}
 
@@ -125,6 +145,22 @@ public class StandardConfigDataLocationResolver
 		for (ConfigDataLocation configDataLocation : configDataLocations) {
 			references.addAll(getReferences(context, configDataLocation));
 		}
+
+		// references = 12
+		// file:./application.yaml
+		// file:./application.yml
+		// file:./application.xml
+		// file:./application.properties
+
+		// file:./config/application.yaml
+		// file:./config/application.yml
+		// file:./config/application.xml
+		// file:./config/application.properties
+
+		// file:./config/*/application.yaml
+		// file:./config/*/application.yml
+		// file:./config/*/application.xml
+		// file:./config/*/application.properties
 		return references;
 	}
 
@@ -132,6 +168,7 @@ public class StandardConfigDataLocationResolver
 			ConfigDataLocation configDataLocation) {
 		String resourceLocation = getResourceLocation(context, configDataLocation);
 		try {
+			// 是否目录
 			if (isDirectory(resourceLocation)) {
 				return getReferencesForDirectory(configDataLocation, resourceLocation, NO_PROFILE);
 			}
@@ -187,6 +224,7 @@ public class StandardConfigDataLocationResolver
 	private Set<StandardConfigDataReference> getReferencesForDirectory(ConfigDataLocation configDataLocation,
 			String directory, String profile) {
 		Set<StandardConfigDataReference> references = new LinkedHashSet<>();
+		// 默认是application
 		for (String name : this.configNames) {
 			Deque<StandardConfigDataReference> referencesForName = getReferencesForConfigName(name, configDataLocation,
 					directory, profile);
@@ -198,6 +236,14 @@ public class StandardConfigDataLocationResolver
 	private Deque<StandardConfigDataReference> getReferencesForConfigName(String name,
 			ConfigDataLocation configDataLocation, String directory, String profile) {
 		Deque<StandardConfigDataReference> references = new ArrayDeque<>();
+
+		/**
+		 * 属性配置文件加载器
+		 * 1.文件扩展名
+		 * 2.加载
+		 *
+		 * 根据 路径 + 文件名，以及扩展名，创建引用
+		 */
 		for (PropertySourceLoader propertySourceLoader : this.propertySourceLoaders) {
 			for (String extension : propertySourceLoader.getFileExtensions()) {
 				StandardConfigDataReference reference = new StandardConfigDataReference(configDataLocation, directory,
@@ -246,6 +292,7 @@ public class StandardConfigDataLocationResolver
 	private List<StandardConfigDataResource> resolve(Set<StandardConfigDataReference> references) {
 		List<StandardConfigDataResource> resolved = new ArrayList<>();
 		for (StandardConfigDataReference reference : references) {
+			// 把reference 转换成resource
 			resolved.addAll(resolve(reference));
 		}
 		if (resolved.isEmpty()) {
@@ -291,6 +338,7 @@ public class StandardConfigDataLocationResolver
 	}
 
 	private List<StandardConfigDataResource> resolve(StandardConfigDataReference reference) {
+		// 路径不包含 *
 		if (!this.resourceLoader.isPattern(reference.getResourceLocation())) {
 			return resolveNonPattern(reference);
 		}

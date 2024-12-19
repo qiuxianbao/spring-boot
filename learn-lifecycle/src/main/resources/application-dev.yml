@@ -1,0 +1,5 @@
+server:
+  port: 8088
+
+# 如果没有 application.yml, 只有application-dev.yml, 默认是不会生效的，
+# 设置启动参数 --spring.profiles.active=dev 后才会生效

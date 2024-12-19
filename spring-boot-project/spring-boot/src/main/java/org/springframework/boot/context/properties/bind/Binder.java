@@ -329,6 +329,18 @@ public class Binder {
 		return bind(name, target, handler, context, false, create);
 	}
 
+	/**
+	 * 绑定操作
+	 *
+	 * @param name
+	 * @param target
+	 * @param handler
+	 * @param context
+	 * @param allowRecursiveBinding
+	 * @param create
+	 * @return
+	 * @param <T>
+	 */
 	private <T> T bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, Context context,
 			boolean allowRecursiveBinding, boolean create) {
 		try {

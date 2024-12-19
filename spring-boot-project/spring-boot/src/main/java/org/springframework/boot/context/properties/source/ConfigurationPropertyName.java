@@ -31,7 +31,8 @@ import org.springframework.util.StringUtils;
  * names may contain the characters "{@code a-z}" "{@code 0-9}") and "{@code -}", they
  * must be lower-case and must start with an alphanumeric character. The "{@code -}" is
  * used purely for formatting, i.e. "{@code foo-bar}" and "{@code foobar}" are considered
- * equivalent.
+ * equivalent.（- 用于格式化）
+ *
  * <p>
  * The "{@code [}" and "{@code ]}" characters may be used to indicate an associative
  * index(i.e. a {@link Map} key or a {@link Collection} index. Indexes names are not
@@ -1034,32 +1035,38 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 
 		/**
 		 * The element is logically empty (contains no valid chars).
+		 * 不包含任务有效字符
 		 */
 		EMPTY(false),
 
 		/**
 		 * The element is a uniform name (a-z, 0-9, no dashes, lowercase).
+		 * 为统一字符（a-z, 0-9，不含破折号，小写）
 		 */
 		UNIFORM(false),
 
 		/**
 		 * The element is almost uniform, but it contains (but does not start with) at
 		 * least one dash.
+		 * 包含至少一个破折号（不以破折号开头）
 		 */
 		DASHED(false),
 
 		/**
 		 * The element contains non-uniform characters and will need to be converted.
+		 * 元素包含非统一字符，需要转换
 		 */
 		NON_UNIFORM(false),
 
 		/**
 		 * The element is non-numerically indexed.
+		 * 非数字索引
 		 */
 		INDEXED(true),
 
 		/**
 		 * The element is numerically indexed.
+		 * 数字索引
 		 */
 		NUMERICALLY_INDEXED(true);
 
@@ -1073,6 +1080,10 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 			return this.indexed;
 		}
 
+		/**
+		 * 是否相等检查
+		 * @return
+		 */
 		public boolean allowsFastEqualityCheck() {
 			return this == UNIFORM || this == NUMERICALLY_INDEXED;
 		}

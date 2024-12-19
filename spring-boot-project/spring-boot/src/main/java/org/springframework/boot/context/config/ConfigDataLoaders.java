@@ -69,6 +69,7 @@ class ConfigDataLoaders {
 	ConfigDataLoaders(DeferredLogFactory logFactory, ConfigurableBootstrapContext bootstrapContext,
 			ClassLoader classLoader, List<String> names) {
 		this.logger = logFactory.getLog(getClass());
+		// 通过类名，构造方法的方式进行实例化
 		Instantiator<ConfigDataLoader<?>> instantiator = new Instantiator<>(ConfigDataLoader.class,
 				(availableParameters) -> {
 					availableParameters.add(Log.class, logFactory::getLog);
@@ -112,6 +113,7 @@ class ConfigDataLoaders {
 		ConfigDataLoader<R> result = null;
 		for (int i = 0; i < this.loaders.size(); i++) {
 			ConfigDataLoader<?> candidate = this.loaders.get(i);
+			// 匹配loader
 			if (this.resourceTypes.get(i).isInstance(resource)) {
 				ConfigDataLoader<R> loader = (ConfigDataLoader<R>) candidate;
 				if (loader.isLoadable(context, resource)) {

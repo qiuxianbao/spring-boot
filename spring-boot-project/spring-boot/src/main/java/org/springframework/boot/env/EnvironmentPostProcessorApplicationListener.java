@@ -49,6 +49,10 @@ public class EnvironmentPostProcessorApplicationListener implements SmartApplica
 
 	private int order = DEFAULT_ORDER;
 
+	/**
+	 * 函数式接口
+	 * 入参是T, 返参是R
+	 */
 	private final Function<ClassLoader, EnvironmentPostProcessorsFactory> postProcessorsFactory;
 
 	/**
@@ -56,6 +60,8 @@ public class EnvironmentPostProcessorApplicationListener implements SmartApplica
 	 * {@link EnvironmentPostProcessor} classes loaded via {@code spring.factories}.
 	 */
 	public EnvironmentPostProcessorApplicationListener() {
+		// 空参构造中进行初始化
+		// 函数式接口，在调用apply时，入参是classLoader，返参是ReflectionEnvironmentPostProcessorsFactory
 		this(EnvironmentPostProcessorsFactory::fromSpringFactories, new DeferredLogs());
 	}
 
@@ -99,6 +105,27 @@ public class EnvironmentPostProcessorApplicationListener implements SmartApplica
 	private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
 		ConfigurableEnvironment environment = event.getEnvironment();
 		SpringApplication application = event.getSpringApplication();
+
+		/**
+		 * null, DefaultBootstrapContext
+		 *
+		 * getResourceLoader 参见
+		 * @see SpringApplication#SpringApplication(ResourceLoader, Class[])
+		 *
+		 * getEnvironmentPostProcessors
+		 * spring-boot.jar
+		 *  @see org.springframework.boot.env.RandomValuePropertySourceEnvironmentPostProcessor,\	[*]
+		 *  @see org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor,\
+		 *  @see org.springframework.boot.env.SpringApplicationJsonEnvironmentPostProcessor,\
+		 *  @see org.springframework.boot.cloud.CloudFoundryVcapEnvironmentPostProcessor,\
+		 *  @see org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor,\	[*]
+		 *
+		 *  spring-boot-autoconfigure.jar
+		 *  @see org.springframework.boot.autoconfigure.integration.IntegrationPropertiesEnvironmentPostProcessor
+		 *
+		 *  @see org.springframework.boot.reactor.DebugAgentEnvironmentPostProcessor
+		 *
+		 */
 		for (EnvironmentPostProcessor postProcessor : getEnvironmentPostProcessors(application.getResourceLoader(),
 				event.getBootstrapContext())) {
 			postProcessor.postProcessEnvironment(environment, application);
@@ -120,6 +147,7 @@ public class EnvironmentPostProcessorApplicationListener implements SmartApplica
 	List<EnvironmentPostProcessor> getEnvironmentPostProcessors(ResourceLoader resourceLoader,
 			ConfigurableBootstrapContext bootstrapContext) {
 		ClassLoader classLoader = (resourceLoader != null) ? resourceLoader.getClassLoader() : null;
+		// 入参null，返回 ReflectionEnvironmentPostProcessorsFactory
 		EnvironmentPostProcessorsFactory postProcessorsFactory = this.postProcessorsFactory.apply(classLoader);
 		return postProcessorsFactory.getEnvironmentPostProcessors(this.deferredLogs, bootstrapContext);
 	}
